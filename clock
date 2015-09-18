@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Clock</title>
+<style>
+body {
+	background-color:#000;
+	color:#0F0;
+	margin:0;
+	padding:0;
+}
+#wrapper {
+	padding-top:200px;
+	width:100%;
+}
+#clock {
+	width: 73%;
+	margin:0 auto;
+	position:relative;
+}
+
+#hour {
+	
+}
+
+#minutes {
+	
+}
+
+#seconds {
+	
+}
+
+#meridian {
+	font-size:3.0em;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:900;	
+}
+
+.time {
+	display:inline-block;
+	margin:2px;
+	padding:0;
+}
+.lightbox {
+	display:inline-block;
+	margin:0;
+	padding:0;
+	
+}
+.light {
+	margin:0;
+	padding:0;
+	border-radius:8px;
+	min-width:30px;
+	min-height:30px;
+	background-color:#030;
+	display:inline-block;
+	
+	
+}
+
+.vert {
+	margin-top:-10px;
+	height:100px;
+}
+
+.horiz {
+	width:100px;
+	margin-top:-20px;
+	margin-bottom:100px;
+}
+.divider {
+	display:inline-block;
+	height:100px;
+	max-width:30px;
+}
+
+.colons {
+	margin-bottom:70px;
+	background-color:#0f0;	
+}
+.lightfloor {
+	margin-left:30px;
+	margin-bottom:0px;
+}
+.litup {
+	background-color:#0f0;	
+}
+.clear {
+	clear:both;	
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+$(function() {
+	var timer;
+	var numberSet = [
+		[1,2,3,5,7,9],
+		[3,7],
+		[2,3,5,6,9],
+		[2,3,6,7,9],
+		[1,3,6,7],
+		[1,2,6,7,9],
+		[1,2,5,6,7,9],
+		[2,3,7],
+		[1,2,3,5,6,7,9],
+		[1,2,3,6,7]
+	];
+	function updateTime() {
+		var date = new Date();
+		var hour = date.getHours();
+		var minutes = date.getMinutes();
+		var seconds = date.getSeconds();
+		var meridian;
+		if (hour>11) {
+			if (hour !=12) {
+				hour = hour -12;	
+			}
+			meridian="PM";
+		} else {
+			if (hour ==12) {
+				hour = 12;	
+			}
+			meridian="AM";
+		}
+		$(".light").removeClass("litup");
+		var ic = 1;
+		var hoursA = getDigits(hour);
+		hoursA.forEach(function(val) {
+			val = parseInt(val);
+			if (ic==1 && hoursA.length==1) {
+				ic++;
+				setValues(val, "b"+ic);
+				console.log("hours "+val+ "pos:"+"b"+ic);
+				ic++;
+			} else {
+				setValues(val, "b"+ic);
+				console.log("hours "+val+ "pos:"+"b"+ic);
+				ic++;
+			}
+		});
+		var minutesA = getDigits(minutes);
+		minutesA.forEach(function(val) {
+			val = parseInt(val);
+			if (ic==3 && minutesA.length==1) {
+				setValues(0, "b"+ic);
+				ic++;
+				setValues(val, "b"+ic);
+				console.log("minutes "+val+ "pos:"+"b"+ic);
+				ic++;
+			} else {
+				setValues(val, "b"+ic);
+				console.log("minutes "+val+ "pos:"+"b"+ic);
+				ic++;
+			}
+		});
+		var secondsA = getDigits(seconds);
+		secondsA.forEach(function(val) {
+			val = parseInt(val);
+			if (ic==5 && secondsA.length==1) {
+				setValues(0, "b"+ic);
+				ic++;
+				setValues(val, "b"+ic);
+				console.log("seconds "+val+ "pos:"+"b"+ic);
+				ic++;
+			} else {
+				setValues(val, "b"+ic);
+				console.log("seconds "+val+ "pos:"+"b"+ic);
+				ic++;
+			}
+		});
+		$("#meridian").text(meridian);
+		timer = setTimeout(function() {
+			updateTime();
+		}, 60,00);
+	}
+	
+	function setValues(digit, box) {
+		var values = numberSet[digit];
+		values.forEach(function(value){
+			$("#"+box+" div:nth-child("+value+")").addClass("litup");
+			
+		});
+	}
+	
+	function getDigits(number) {
+		var string = ""+number;
+		var strlen = string.length;
+		var numberArray = [];
+		for (var i=0;i<strlen;i++) {
+			numberArray.push(string.substring(i,i+1));
+		}
+		return numberArray;		
+	}
+
+	updateTime();
+});
+</script>
+</head>
+
+<body>
+<div id="wrapper">
+    <div id="clock">
+        <div id="hour" class="time">
+            <div class="lightbox" id="b1"><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light horiz lightfloor"></div></div>
+            <div class="lightbox" id="b2"><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light horiz lightfloor"></div></div>
+        </div>
+        <div class="divider">
+        	<div class="light colons"></div>
+            <div class="light colons"></div>
+        </div>
+        <div id="minutes" class="time">
+            <div class="lightbox" id="b3"><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light horiz lightfloor"></div></div>
+            <div class="lightbox" id="b4"><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light horiz lightfloor"></div></div>
+        </div>
+        <div class="divider">
+        	<div class="light colons"></div>
+            <div class="light colons"></div>
+        </div>
+        <div id="seconds" class="time">
+            <div class="lightbox" id="b5"><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light horiz lightfloor"></div></div>
+            <div class="lightbox" id="b6"><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light vert"></div><div class="light horiz"></div><div class="light vert"></div><div class="clear"></div><div class="light horiz lightfloor"></div></div>
+        </div>
+        <div id="meridian" class="time"></div>
+    </div>
+</div>
+</body>
+</html>
